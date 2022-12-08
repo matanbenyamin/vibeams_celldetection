@@ -213,15 +213,7 @@ class TemplateBasedDetector():
         pred['scales'] = pred['scales'][keep_inds]
         pred['corrs'] = pred['corrs'][keep_inds]
 
-
-
-        # calculate the distance between the cell color and the background color
-
-
-        # remove cells that are not of the same color as the template
-        # this is done by calculating the euclidean distance between the cell color and the template color
-        # and removing cells that are further away than a threshold
-
+        return pred
 
 
 
