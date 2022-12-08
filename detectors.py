@@ -146,7 +146,7 @@ class TemplateBasedDetector():
         union = area1 + area2 - intersection
         return intersection / np.min([area1, area2])
 
-    def nms(self, pred, overlapThresh=0.1):
+    def nms(self, pred, overlapThresh=0.05):
 
         bboxes = pred['bboxes']
 
@@ -179,6 +179,49 @@ class TemplateBasedDetector():
         pred['corrs'] = pred['corrs'][keep]
 
         return pred
+
+    def cell_color_filter(self, img, pred):
+        # this filter is used to remove false positives that are not cells
+        # it does this by checking the color of the cell and removing cells that are not of this color
+        # the color is determined by the color of the cell in the template image
+        #the backgrounf color is determined by the average color outside all bbbxes
+
+
+        # calculate cell color histogram
+        cell_color_hist = []
+        for bbox in bboxes:
+            hist = np.histogram(img[bbox[1]:bbox[3], bbox[0]:bbox[2]], bins=5, range=(0, 256))[0]
+            # normalize the histogram
+            hist = hist / np.sum(hist)
+            cell_color_hist.append(hist)
+        cell_color_hist = np.array(cell_color_hist)
+        average_cell_color = np.mean(cell_color_hist, axis=0)
+
+        keep_inds = []
+        for i, cell_hist in enumerate(cell_color_hist):
+            # calculate the distance between the cell color and the background color
+            dist = np.linalg.norm(cell_hist - average_cell_color)
+            print(dist)
+            # if the distance is small then the cell is probably not a cell
+            if dist < 0.5:
+                keep_inds.append(i)
+
+        bboxes = bboxes[keep_inds]
+        pred['bboxes'] = bboxes
+        pred['best_template'] = pred['best_template'][keep_inds]
+        pred['scales'] = pred['scales'][keep_inds]
+        pred['corrs'] = pred['corrs'][keep_inds]
+
+
+
+        # calculate the distance between the cell color and the background color
+
+
+        # remove cells that are not of the same color as the template
+        # this is done by calculating the euclidean distance between the cell color and the template color
+        # and removing cells that are further away than a threshold
+
+
 
 
     def save(self, path):
