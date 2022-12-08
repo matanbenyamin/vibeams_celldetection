@@ -3,6 +3,7 @@ from utils import get_frame
 from utils import plot
 import cv2
 import numpy as np
+import os
 
 detector = TemplateBasedDetector()
 
@@ -15,10 +16,12 @@ detector = detector.load('detector.pkl')
 detector.match_threshold = 0.65
 
 # ============= get a frame
-img = get_frame( r'C:\Users\lab7\Downloads\Jurkat_3_75M_x10_starScan.mp4')
-# if linux
-if img is None:
+# if os is linux
+if os.name == 'posix':
     img = get_frame(r'/home/matan.benyamin/Documents/01052022/Bio Batch_02/Jurkat_Live_2_5M_x10_starScan.mp4')
+elif os.name == 'nt':
+    img = get_frame(r'C:\Users\lab7\Downloads\Jurkat_3_75M_x10_starScan.mp4')
+
 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # ============= detect cells
