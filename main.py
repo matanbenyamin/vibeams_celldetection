@@ -29,7 +29,7 @@ pred = detector.detect(img, )
 bboxes = pred['bboxes']
 
 # ============= filter bbox
-#nms filter
+# nms filter
 pred = detector.nms(pred, overlapThresh = 0.005)
 # cell color filter
 pred = detector.cell_color_filter(pred, img, 0.5)
