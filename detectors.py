@@ -186,7 +186,7 @@ class TemplateBasedDetector():
         # the color is determined by the color of the cell in the template image
         #the backgrounf color is determined by the average color outside all bbbxes
 
-        bboxes = pred['bboxes'][0]
+        bboxes = pred['bboxes']
 
         # calculate cell color histogram
         cell_color_hist = []
